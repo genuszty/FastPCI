@@ -74,7 +74,7 @@ class SceneFlowPWC(nn.Module):
 
         self.fusion = PointsFusion(4, [64,64,128])
 
-    def forward(self, xyz1, xyz2, t, gt, train=False):
+    def forward(self, xyz1, xyz2, t, gt=None, train=False):
        
         #xyz1, xyz2: B, 3, N
         #color1, color2: B, 3, N
@@ -265,12 +265,13 @@ class SceneFlowPWC(nn.Module):
             warped_pc = warped_pc1t
 
         fused_points = self.fusion(warped_pc, refine_out, k, t)
-        gt1 = downsampling(gt, int(N/4))
-        gt2 = downsampling(gt, int(N/16))
-        gt3 = downsampling(gt, int(N/32))
-        gt_list = [gt1, gt2, gt3]
-        warped_list = [warped_pc1t, warped_pc1t_l1, warped_pc1t_l2, warped_pc1t_l3]
         if train:
+            gt1 = downsampling(gt, int(N/4))
+            gt2 = downsampling(gt, int(N/16))
+            gt3 = downsampling(gt, int(N/32))
+            gt_list = [gt1, gt2, gt3]
+            warped_list = [warped_pc1t, warped_pc1t_l1, warped_pc1t_l2, warped_pc1t_l3]
+        
             return flow0, fused_points, warped_list, gt_list, warped_pc2t
         else:
             return fused_points
