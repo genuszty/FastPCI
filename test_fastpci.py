@@ -73,7 +73,7 @@ def test(args):
             
             for j in range(len(time_inp)):
                 t = time_inp[j]
-                pred_pc = net(input[1], input[2], t, gt[j])
+                pred_pc = net(input[1], input[2], t)
 
                 cd = chamfer_loss(pred_pc, gt[j])
                 emd = EMD(pred_pc, gt[j])
